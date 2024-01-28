@@ -1,0 +1,3 @@
+dev/    export-ignore
+dev-docs/    export-ignore
+composer.lock export-ignore

@@ -1,0 +1,13 @@
+{
+    "name": "wappcode/gql-pdss-skeleton",
+    "description": "Skeleton Graphql + Doctrine",
+    "type": "project",
+    "require": {
+        "wappcode/gqlpdss": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AppModule\\": "modules/AppModule/src/"
+        }
+    }
+}
