@@ -34,7 +34,12 @@ class AppModule extends AbstractModule
      */
     function getResolvers(): array
     {
-        return [];
+        return [
+            'Author::fullName'=> function($root, $args, $context, $info){
+                return $root["firstName"]." ".$root["lastName"] ??'';
+
+            }
+        ];
     }
     /**
      * Array con los graphql Queries del módulo
@@ -54,6 +59,7 @@ class AppModule extends AbstractModule
                     return $args["message"];
                 }
             ],
+            'getAuthor'=> GPDFieldFactory::buildFieldItem($this->context, Author::class),
             'getAuthorsList'=> GPDFieldFactory::buildFieldList($this->context, Author::class),
         ];
     }

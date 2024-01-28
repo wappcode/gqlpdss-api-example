@@ -36,6 +36,15 @@ class Author extends AbstractEntityModel{
 
 
     /**
+     * Gets the value de fullname
+     *
+     * @return string
+     */
+    public function getFullName(){
+        return $this->firstName ." ".$this->lastName ?? '';
+    }
+
+    /**
      * Get the value of firstName
      *
      * @return  string
