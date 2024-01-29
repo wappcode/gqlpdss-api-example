@@ -3,6 +3,8 @@
 namespace AppModule;
 
 use AppModule\Entities\Author;
+use AppModule\Graphql\AuthorConnectionFactory;
+use AppModule\Graphql\AuthorEdgeFactory;
 use GPDCore\Graphql\GPDFieldFactory;
 use GPDCore\Library\AbstractModule;
 use GraphQL\Type\Definition\Type;
@@ -23,8 +25,11 @@ class AppModule extends AbstractModule
     {
         return [
             'invokables' => [],
-            'factories' => [],
-            'aliases' => []
+            'factories' => [
+                AuthorEdgeFactory::NAME => AuthorEdgeFactory::getFactory($this->context,Author::class),
+                AuthorConnectionFactory::NAME => AuthorConnectionFactory::getFactory($this->context, AuthorEdgeFactory::NAME)
+            ],
+ 
         ];
     }
     /**
@@ -48,6 +53,8 @@ class AppModule extends AbstractModule
      */
     function getQueryFields(): array
     {
+
+        $authorConnection = $this->context->getServiceManager()->get(AuthorConnectionFactory::NAME);
         return [
             'echo' =>  [
                 'type' => Type::nonNull(Type::string()),
@@ -61,6 +68,7 @@ class AppModule extends AbstractModule
             ],
             'getAuthor'=> GPDFieldFactory::buildFieldItem($this->context, Author::class),
             'getAuthorsList'=> GPDFieldFactory::buildFieldList($this->context, Author::class),
+            'getAuthorsPaginatedList'=> GPDFieldFactory::buildFieldConnection($this->context,$authorConnection,  Author::class),
         ];
     }
     /**
