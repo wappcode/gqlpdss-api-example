@@ -3,11 +3,16 @@
 namespace AppModule;
 
 use AppModule\Entities\Author;
+use AppModule\Entities\Post;
 use AppModule\Graphql\AuthorConnectionFactory;
 use AppModule\Graphql\AuthorEdgeFactory;
+use AppModule\Graphql\AuthorResolversFactory;
+use AppModule\Graphql\PostResolversFactory;
 use GPDCore\Graphql\GPDFieldFactory;
 use GPDCore\Library\AbstractModule;
 use GraphQL\Type\Definition\Type;
+use PostConnectionFactory\PostConnectionFactory;
+use PostEdgeFactory;
 
 class AppModule extends AbstractModule
 {
@@ -26,10 +31,12 @@ class AppModule extends AbstractModule
         return [
             'invokables' => [],
             'factories' => [
-                AuthorEdgeFactory::NAME => AuthorEdgeFactory::getFactory($this->context,Author::class),
-                AuthorConnectionFactory::NAME => AuthorConnectionFactory::getFactory($this->context, AuthorEdgeFactory::NAME)
+                AuthorEdgeFactory::NAME => AuthorEdgeFactory::getFactory($this->context, Author::class),
+                AuthorConnectionFactory::NAME => AuthorConnectionFactory::getFactory($this->context, AuthorEdgeFactory::NAME),
+                PostEdgeFactory::NAME => PostEdgeFactory::getFactory($this->context, Post::class),
+                PostConnectionFactory::NAME => PostConnectionFactory::getFactory($this->context, PostEdgeFactory::NAME)
             ],
- 
+
         ];
     }
     /**
@@ -40,10 +47,9 @@ class AppModule extends AbstractModule
     function getResolvers(): array
     {
         return [
-            'Author::fullName'=> function($root, $args, $context, $info){
-                return $root["firstName"]." ".$root["lastName"] ??'';
-
-            }
+            'Post::author' => PostResolversFactory::getAuthorResolver(),
+            'Author::posts' => AuthorResolversFactory::getPostResolver(),
+            'Author::fullName' => AuthorResolversFactory::getFullnameResolver(),
         ];
     }
     /**
@@ -55,6 +61,7 @@ class AppModule extends AbstractModule
     {
 
         $authorConnection = $this->context->getServiceManager()->get(AuthorConnectionFactory::NAME);
+        $postConnection = $this->context->getServiceManager()->get(PostConnectionFactory::NAME);
         return [
             'echo' =>  [
                 'type' => Type::nonNull(Type::string()),
@@ -66,9 +73,12 @@ class AppModule extends AbstractModule
                     return $args["message"];
                 }
             ],
-            'getAuthor'=> GPDFieldFactory::buildFieldItem($this->context, Author::class),
-            'getAuthorsList'=> GPDFieldFactory::buildFieldList($this->context, Author::class),
-            'getAuthorsPaginatedList'=> GPDFieldFactory::buildFieldConnection($this->context,$authorConnection,  Author::class),
+            'getAuthor' => GPDFieldFactory::buildFieldItem($this->context, Author::class),
+            'getAuthorsList' => GPDFieldFactory::buildFieldList($this->context, Author::class),
+            'getAuthorsPaginatedList' => GPDFieldFactory::buildFieldConnection($this->context, $authorConnection,  Author::class),
+            'getPost' => GPDFieldFactory::buildFieldItem($this->context, Post::class),
+            'getPostsList' => GPDFieldFactory::buildFieldList($this->context, Post::class),
+            'getPostsPaginatedList' => GPDFieldFactory::buildFieldConnection($this->context, $postConnection,  Post::class),
         ];
     }
     /**
@@ -79,7 +89,12 @@ class AppModule extends AbstractModule
     function getMutationFields(): array
     {
         return [
-            'createAuthor' => GPDFieldFactory::buildFieldCreate($this->context, Author::class)
+            'createAuthor' => GPDFieldFactory::buildFieldCreate($this->context, Author::class),
+            'updateAuthor' => GPDFieldFactory::buildFieldUpdate($this->context, Author::class),
+            'deleteAuthor' => GPDFieldFactory::buildFieldDelete($this->context, Author::class),
+            'createPost' => GPDFieldFactory::buildFieldCreate($this->context, Post::class),
+            'updatePost' => GPDFieldFactory::buildFieldUpdate($this->context, Post::class),
+            'deletePost' => GPDFieldFactory::buildFieldDelete($this->context, Post::class)
         ];
     }
 }
