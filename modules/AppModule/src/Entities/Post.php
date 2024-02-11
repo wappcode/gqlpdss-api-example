@@ -14,10 +14,12 @@ class Post extends AbstractEntityModel
 {
     /**
      *
+     * @ORM\Column(type="string", length=255, nullable=false, name="title")
      * @var string
      */
     private $title;
     /**
+     * @ORM\Column(type="text", nullable=false, name="body")
      * @var string
      */
     private $body;

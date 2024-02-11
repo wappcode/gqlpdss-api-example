@@ -1,6 +1,6 @@
 <?php
 
-namespace PostConnectionFactory;
+namespace AppModule\Graphql;
 
 use GPDCore\Library\AbstractConnectionTypeServiceFactory;
 

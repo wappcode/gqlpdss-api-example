@@ -2,17 +2,17 @@
 
 namespace AppModule;
 
-use AppModule\Entities\Author;
 use AppModule\Entities\Post;
-use AppModule\Graphql\AuthorConnectionFactory;
-use AppModule\Graphql\AuthorEdgeFactory;
-use AppModule\Graphql\AuthorResolversFactory;
-use AppModule\Graphql\PostResolversFactory;
-use GPDCore\Graphql\GPDFieldFactory;
-use GPDCore\Library\AbstractModule;
+use AppModule\Entities\Author;
 use GraphQL\Type\Definition\Type;
-use PostConnectionFactory\PostConnectionFactory;
-use PostEdgeFactory;
+use GPDCore\Library\AbstractModule;
+use GPDCore\Graphql\GPDFieldFactory;
+use AppModule\Graphql\PostEdgeFactory;
+use AppModule\Graphql\AuthorEdgeFactory;
+use AppModule\Graphql\PostResolversFactory;
+use AppModule\Graphql\PostConnectionFactory;
+use AppModule\Graphql\AuthorResolversFactory;
+use AppModule\Graphql\AuthorConnectionFactory;
 
 class AppModule extends AbstractModule
 {
